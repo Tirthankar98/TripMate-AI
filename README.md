@@ -76,14 +76,17 @@ Each specialist agent calls out to real data sources through **MCP (Model Contex
 
 ## Screenshots
 
-
 ![TripMate AI UI](screenshots/Tripmate_AI_UI.jpeg)
+
 ---
+
 ![Execution and Draft itinerary](screenshots/Execution_and_Draft.jpeg)
+
 ---
+
 ![Approval screen](screenshots/Review_and_Feedback.jpeg)
 
-
+---
 
 ## Getting Started Locally
 
