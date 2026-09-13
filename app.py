@@ -43,6 +43,19 @@ class ApprovalRequest(BaseModel):
     feedback: str = ""
 
 
+def _friendly_error(exc: Exception) -> str:
+    error_text = str(exc)
+
+    if "rate_limit_exceeded" in error_text or "429" in error_text:
+        return (
+            "This demo has hit its free-tier usage limit for now. "
+            "Please try again in a few minutes, or check out the source "
+            "code on GitHub in the meantime."
+        )
+
+    return "Something went wrong while generating your plan. Please try again."
+
+
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     return templates.TemplateResponse(
@@ -87,7 +100,7 @@ async def travel_planner(request_data: TravelRequest):
             status_code=500,
             content={
                 "success": False,
-                "error": str(exc),
+                "error": _friendly_error(exc),
             },
         )
 
@@ -105,10 +118,10 @@ async def approve_travel_plan(request_data: ApprovalRequest):
             )
 
         result = await run_in_threadpool(
-             resume_travel_agent,
-             thread_id=request_data.thread_id,
-             approved=request_data.approved,
-             feedback=request_data.feedback,
+            resume_travel_agent,
+            thread_id=request_data.thread_id,
+            approved=request_data.approved,
+            feedback=request_data.feedback,
         )
 
         return JSONResponse(
@@ -126,7 +139,7 @@ async def approve_travel_plan(request_data: ApprovalRequest):
             status_code=500,
             content={
                 "success": False,
-                "error": str(exc),
+                "error": _friendly_error(exc),
             },
         )
 
